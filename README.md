@@ -5,8 +5,8 @@ An OptiX-based differentiable 3D Gaussian Ray Tracer, inspired by the work "3D G
 ### Install
 ```bash
 # clone the repo
-git clone xxx
-cd xxx
+git clone https://github.com/fudan-zvg/gtracer.git
+cd gtracer
 
 # use cmake to build the project for ptx file (for Optix)
 rm -rf ./build && mkdir build && cd build && cmake .. && make && cd ../
