@@ -26,11 +26,15 @@ python renderer.py -p point_cloud.ply
 
 * Credits to [Instant-NGP](https://github.com/NVlabs/instant-ngp) and [raytracing](https://github.com/NVlabs/instant-ngp).
 * Credits to the original [3D Gaussian Ray Tracing](https://gaussiantracer.github.io/) paper:
-```
-@article{3dgrt2024,
-    author = {Nicolas Moenne-Loccoz and Ashkan Mirzaei and Or Perel and Riccardo de Lutio and Janick Martinez Esturo and Gavriel State and Sanja Fidler and Nicholas Sharp and Zan Gojcic},
-    title = {3D Gaussian Ray Tracing: Fast Tracing of Particle Scenes},
-    journal = {ACM Transactions on Graphics and SIGGRAPH Asia},
-    year = {2024},
+
+
+## 📜 Citation
+If you find this work useful for your research, please cite our github repo:
+```bibtex
+@misc{gu2024gtracer,
+    title = {3D Gaussian Ray Tracer},
+    author = {Gu, Chun and Zhang, Li},
+    howpublished = {\url{https://github.com/fudan-zvg/gtracer}},
+    year = {2024}
 }
 ```
