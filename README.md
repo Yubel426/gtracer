@@ -1,6 +1,6 @@
 # 3D Gaussian Ray Tracer
 
-An OptiX-based differentiable 3D Gaussian Ray Tracer, inspired by the work "3D Gaussian Ray Tracing: Fast Tracing of Particle Scenes" (https://gaussiantracer.github.io/).
+An OptiX-based differentiable 3D Gaussian Ray Tracer, inspired by the work [3D Gaussian Ray Tracing: Fast Tracing of Particle Scenes](https://gaussiantracer.github.io/).
 
 ### Install
 ```bash
