@@ -25,7 +25,7 @@ python renderer.py -p point_cloud.ply
 ### Acknowledgement
 
 * Credits to [Instant-NGP](https://github.com/NVlabs/instant-ngp) and [raytracing](https://github.com/NVlabs/instant-ngp).
-* Credits to the original [3D Gaussian Ray Tracing](https://gaussiantracer.github.io/) paper:
+* Credits to the original [3D Gaussian Ray Tracing](https://gaussiantracer.github.io/) paper.
 
 
 ## 📜 Citation
