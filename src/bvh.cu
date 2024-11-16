@@ -113,12 +113,21 @@ namespace optix {
 			// Specify options for the build. We use default options for simplicity.
 			accel_options.operation = OPTIX_BUILD_OPERATION_UPDATE;
 
+			// Populate the build input struct with our triangle data as well as
+			// information about the sizes and types of our data
+			const uint32_t triangle_input_flags[1] = { OPTIX_GEOMETRY_FLAG_NONE };
+
 			CUdeviceptr d_triangles = (CUdeviceptr)(uintptr_t)triangles;
 			triangle_input.triangleArray.vertexBuffers = &d_triangles;
+			triangle_input.triangleArray.flags = triangle_input_flags;
 
-			// OptixAccelBufferSizes gas_buffer_sizes2;
-			OPTIX_CHECK_THROW(optixAccelComputeMemoryUsage(optix, &accel_options, &triangle_input, 1, &gas_buffer_sizes));
-			GPUMemory<char> gas_tmp_buffer2{gas_buffer_sizes.tempSizeInBytes};
+			// // Query OptiX for the memory requirements for our GAS
+			// OPTIX_CHECK_THROW(optixAccelComputeMemoryUsage(optix, &accel_options, &triangle_input, 1, &gas_buffer_sizes));
+
+			// // Allocate device memory for the scratch space buffer as well
+			// // as the GAS itself
+			// gas_tmp_buffer.resize(gas_buffer_sizes.tempSizeInBytes);
+			// m_gas_gpu_buffer.resize(gas_buffer_sizes.outputSizeInBytes);
 
 			OPTIX_CHECK_THROW(optixAccelBuild(
 				optix,
@@ -126,7 +135,7 @@ namespace optix {
 				&accel_options,
 				&triangle_input,
 				1,           // num build inputs
-				(CUdeviceptr)(uintptr_t)gas_tmp_buffer2.data(),
+				(CUdeviceptr)(uintptr_t)gas_tmp_buffer.data(),
 				gas_buffer_sizes.tempSizeInBytes,
 				(CUdeviceptr)(uintptr_t)m_gas_gpu_buffer.data(),
 				gas_buffer_sizes.outputSizeInBytes,
