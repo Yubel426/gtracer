@@ -16,12 +16,41 @@ pip install .
 ```
 
 ### Example usage
+Python API:
+```python
+from gtracer import _C
+# create a Gaussian Ray Tracer
+bvh = _C.create_gaussiantracer()
+
+# build it with triangles associated with each Gaussian
+bvh.build_bvh(vertices_b[faces_b])
+
+# update the vertices in bvh if you already build it, faster than build_bvh. 
+# But the topology and the number of triangle faces should keep the same.
+bvh.update_bvh(vertices_b[faces_b])
+
+# trace forward
+bvh.trace_forward(
+    rays_o, rays_d, gs_idxs, means3D, opacity, SinvR, shs, 
+    colors, depth, alpha, 
+    alpha_min, transmittance_min, deg,
+)
+
+# trace backward
+bvh.trace_backward(
+    rays_o, rays_d, gs_idxs, means3D, opacity, SinvR, shs, 
+    colors, depth, alpha, 
+    grad_means3D, grad_opacity, grad_SinvR, grad_shs,
+    grad_out_color, grad_out_depth, grad_out_alpha,
+    ctx.alpha_min, ctx.transmittance_min, ctx.deg,
+)
+```
+Example usage:
 ```bash
 cd example
 # Interactive viewer for 3DGS format point cloud
 python renderer.py -p point_cloud.ply
 ```
-
 ### Acknowledgement
 
 * Credits to [Instant-NGP](https://github.com/NVlabs/instant-ngp) and [raytracing](https://github.com/NVlabs/instant-ngp).
