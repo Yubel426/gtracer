@@ -41,7 +41,7 @@ public:
 
     void trace_forward(
         const torch::Tensor rays_o, const torch::Tensor rays_d, const torch::Tensor gs_idxs, 
-        const torch::Tensor means3D, const torch::Tensor opacity, const torch::Tensor SinvR, const torch::Tensor shs, 
+        const torch::Tensor faces, const torch::Tensor vertices, const torch::Tensor opacity, const torch::Tensor SinvR, const torch::Tensor shs, 
         torch::Tensor colors, torch::Tensor depth, torch::Tensor alpha, 
         const float alpha_min, const float transmittance_min, const int deg
         ){
@@ -52,7 +52,7 @@ public:
 
         triangle_bvh->gaussian_trace_forward(
             n_elements, (const glm::vec3*)rays_o.data_ptr<float>(), (const glm::vec3*)rays_d.data_ptr<float>(), gs_idxs.data_ptr<int>(), 
-            (const glm::vec3*)means3D.data_ptr<float>(), opacity.data_ptr<float>(), (const glm::mat3x3*)SinvR.data_ptr<float>(), (const glm::vec3*)shs.data_ptr<float>(), 
+            (const int3*)faces.data_ptr<int>(), (const glm::vec3*)vertices.data_ptr<float>(), opacity.data_ptr<float>(), (const glm::mat3x3*)SinvR.data_ptr<float>(), (const glm::vec3*)shs.data_ptr<float>(), 
             (glm::vec3*)colors.data_ptr<float>(), depth.data_ptr<float>(), alpha.data_ptr<float>(), 
             alpha_min, transmittance_min, deg, max_coeffs, stream);
     }

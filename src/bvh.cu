@@ -177,14 +177,14 @@ public:
 
     void gaussian_trace_forward(
 		uint32_t n_elements, const glm::vec3* rays_o, const glm::vec3* rays_d, const int* gs_idxs, 
-		const glm::vec3* means3D, const float* opacity, const glm::mat3x3* SinvR, const glm::vec3* shs, 
+		const int3* faces, const glm::vec3* vertices, const float* opacity, const glm::mat3x3* SinvR, const glm::vec3* shs, 
 		glm::vec3* colors, float* depth, float* alpha, 
 		const float alpha_min, const float transmittance_min, const int deg, const int max_coeffs, cudaStream_t stream
 	) override {
         m_optix.gaussiantrace_forward->invoke(
 			{
 				rays_o, rays_d, gs_idxs, 
-				means3D, opacity, SinvR, shs, 
+				faces, vertices, opacity, SinvR, shs, 
 				colors, depth, alpha, 
 				alpha_min, transmittance_min, deg, max_coeffs, m_optix.gas->handle()
 			}, 

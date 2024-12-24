@@ -58,18 +58,21 @@ extern "C" __global__ void __raygen__rg() {
 			else{
 				t_curr = hitArray[i].t;
 				int gs_idx = params.gs_idxs[primIdx];
+				int3 face = params.faces[primIdx];
+				glm::vec3 vertex0 = params.vertices[face.x];
+				glm::vec3 vertex1 = params.vertices[face.y];
+				glm::vec3 vertex2 = params.vertices[face.z];
 
+				glm::vec3 triangle_center = (vertex0 + vertex1 + vertex2) / 3.0f;
+				
 				float o = params.opacity[gs_idx];
-				glm::vec3 mean3D = params.means3D[gs_idx];
-				glm::mat3x3 SinvR = params.SinvR[gs_idx];
-
-				glm::vec3 o_g = SinvR * (ray_o - mean3D); 
-				glm::vec3 d_g = SinvR * ray_d;
-				float d = -glm::dot(o_g, d_g) / max(1e-6f, glm::dot(d_g, d_g));
-
-				glm::vec3 pos = ray_o + d * ray_d;
-				glm::vec3 p_g = SinvR * (mean3D - pos); 
-				float alpha = min(0.99f, o * __expf(-0.5f * glm::dot(p_g, p_g)));
+				float3 world_p = make_float3(
+					ray_o.x + t_curr * ray_d.x,
+					ray_o.y + t_curr * ray_d.y,
+					ray_o.z + t_curr * ray_d.z
+				);
+				glm::vec3 relative_p = glm::vec3(world_p.x, world_p.y, world_p.z) - triangle_center;
+				float alpha = min(0.99f, o * __expf(-0.5f * glm::dot(relative_p, relative_p)));
 
 				if (alpha<params.alpha_min) continue;
 
@@ -77,8 +80,6 @@ extern "C" __global__ void __raygen__rg() {
 
 				float w = T * alpha;
 				C += w * c;
-				D += w * d;
-				O += w;
 
 				T *= (1 - alpha);
 
