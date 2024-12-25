@@ -9,6 +9,7 @@ class _GaussianTrace(torch.autograd.Function):
         colors = torch.zeros_like(rays_o)
         depth = torch.zeros_like(rays_o[:, 0])
         alpha = torch.zeros_like(rays_o[:, 0])
+        faces = faces.int()
         bvh.trace_forward(
             rays_o, rays_d, gs_idxs, faces, vertices, opacity, SinvR, shs, 
             colors, depth, alpha, 
@@ -25,16 +26,15 @@ class _GaussianTrace(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_out_color, grad_out_depth, grad_out_alpha):
-        rays_o, rays_d, gs_idxs, means3D, opacity, SinvR, shs, colors, depth, alpha = ctx.saved_tensors
-        grad_means3D = torch.zeros_like(means3D)
-        grad_opacity = torch.zeros_like(opacity)
-        grad_SinvR = torch.zeros_like(SinvR)
-        grad_shs = torch.zeros_like(shs)
-        
+        rays_o, rays_d, gs_idxs, faces, vertices, opacity, SinvR, shs, colors, depth, alpha = ctx.saved_tensors
+        grad_vertices = torch.zeros_like(vertices).contiguous()
+        grad_opacity = torch.zeros_like(opacity).contiguous()
+        grad_SinvR = torch.zeros_like(SinvR).contiguous()
+        grad_shs = torch.zeros_like(shs).contiguous()
         ctx.bvh.trace_backward(
-            rays_o, rays_d, gs_idxs, means3D, opacity, SinvR, shs, 
+            rays_o, rays_d, gs_idxs, faces, vertices, opacity, SinvR, shs, 
             colors, depth, alpha, 
-            grad_means3D, grad_opacity, grad_SinvR, grad_shs,
+            grad_vertices, grad_opacity, grad_SinvR, grad_shs,
             grad_out_color, grad_out_depth, grad_out_alpha,
             ctx.alpha_min, ctx.transmittance_min, ctx.deg,
         )
@@ -43,15 +43,15 @@ class _GaussianTrace(torch.autograd.Function):
             None,
             None,
             None,
-            grad_means3D,
+            None,
+            grad_vertices,
             grad_opacity,
-            grad_SinvR,
+            None,
             grad_shs,
             None,
             None,
             None,
         )
-
         return grads
 
 

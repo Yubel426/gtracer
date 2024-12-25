@@ -11,7 +11,6 @@ extern "C" {
 
 extern "C" __global__ void __raygen__rg() {
 	const uint3 idx = optixGetLaunchIndex();
-
 	glm::vec3 ray_o = params.ray_origins[idx.x];
 	glm::vec3 ray_d = params.ray_directions[idx.x];
 	glm::vec3 ray_origin;
@@ -57,7 +56,6 @@ extern "C" __global__ void __raygen__rg() {
 			}
 			else{
 				t_curr = hitArray[i].t;
-				int gs_idx = params.gs_idxs[primIdx];
 				int3 face = params.faces[primIdx];
 				glm::vec3 vertex0 = params.vertices[face.x];
 				glm::vec3 vertex1 = params.vertices[face.y];
@@ -65,7 +63,7 @@ extern "C" __global__ void __raygen__rg() {
 
 				glm::vec3 triangle_center = (vertex0 + vertex1 + vertex2) / 3.0f;
 				
-				float o = params.opacity[gs_idx];
+				float o = params.opacity[primIdx];
 				float3 world_p = make_float3(
 					ray_o.x + t_curr * ray_d.x,
 					ray_o.y + t_curr * ray_d.y,
@@ -74,13 +72,13 @@ extern "C" __global__ void __raygen__rg() {
 				glm::vec3 relative_p = glm::vec3(world_p.x, world_p.y, world_p.z) - triangle_center;
 				float alpha = min(0.99f, o * __expf(-0.5f * glm::dot(relative_p, relative_p)));
 
-				if (alpha<params.alpha_min) continue;
+				// if (alpha<params.alpha_min) continue;
 
-				glm::vec3 c = computeColorFromSH_forward(params.deg, ray_d, params.shs + gs_idx * params.max_coeffs);
+				glm::vec3 c = computeColorFromSH_forward(params.deg, ray_d, params.shs + primIdx * params.max_coeffs);
 
 				float w = T * alpha;
 				C += w * c;
-
+				O += w;
 				T *= (1 - alpha);
 
 				if (T < params.transmittance_min){

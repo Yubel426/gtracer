@@ -69,12 +69,5 @@ setup(
         'build_ext': BuildExtension,
     },
     install_requires=[
-        'ninja',
-        'trimesh',
-        'opencv-python',
-        'torch',
-        'numpy ',
-        'tqdm',
-        'dearpygui',
     ],
 )
